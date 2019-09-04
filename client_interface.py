@@ -38,14 +38,11 @@ class Interface:
         handle_text(self.interface_state, text)
 
     def send_state_to_server(self):
-        self.send_to_server(self.interface_state.as_dict())
-
-
-    def send_to_server(self, message):
         """
-        Send messages to server.
+        Send message with interface_state to server.
         """
         if self.ws:
+            message = self.interface_state.as_dict()
             asyncio.ensure_future(self.ws.send_json(message))
 
     async def get_messages(self):
