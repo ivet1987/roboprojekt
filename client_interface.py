@@ -17,6 +17,9 @@ class Interface:
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text)
         self.interface_state = InterfaceState()
+        self.interface_state.push_change_handlers(
+            self.send_state_to_server,
+        )
         self.game_state = None
 
         # Connection attribute
@@ -36,7 +39,10 @@ class Interface:
         With every key press send interface state to server.
         """
         handle_text(self.interface_state, text)
+
+    def send_state_to_server(self):
         self.send_to_server(self.interface_state.as_dict())
+
 
     def send_to_server(self, message):
         """

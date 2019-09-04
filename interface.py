@@ -33,6 +33,10 @@ class InterfaceState:
                 }
             }
 
+    def push_change_handlers(self, change_callback):
+        self.change_callback = change_callback
+
+
     def select_card(self, dealt_card_index):
         """
         Select a card from the dealt cards and put on
@@ -44,6 +48,7 @@ class InterfaceState:
                 return
             if dealt_card_index not in self.my_program:
                 self.my_program[self.cursor_index] = dealt_card_index
+                self.change_callback()
                 # After select a card Move with cursor to right
                 self.cursor_index_plus()
 
@@ -90,6 +95,7 @@ class InterfaceState:
                 self.power_down = True
             else:
                 self.power_down = False
+        self.change_callback()
 
     def confirm_selection(self):
         """
@@ -97,3 +103,4 @@ class InterfaceState:
         When is True the player ended the selection of cards.
         """
         self.selection_confirmed = True
+        self.change_callback()
