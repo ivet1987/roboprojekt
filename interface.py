@@ -1,5 +1,5 @@
 class InterfaceState:
-    def __init__(self, change_callback):
+    def __init__(self, callback):
         self.dealt_cards = []
         self.robot = None
         self.my_program = [None, None, None, None, None]
@@ -12,7 +12,8 @@ class InterfaceState:
         self.winner = None
         self.timer = False
         self.flag_count = 0
-        self.change_callback = change_callback
+        # callback - callback function which will be called with argument
+        self.callback = callback
 
     def __repr__(self):
         return f"InterfaceState \
@@ -45,7 +46,7 @@ class InterfaceState:
                 return
             if dealt_card_index not in self.my_program:
                 self.my_program[self.cursor_index] = dealt_card_index
-                self.change_callback()
+                self.callback()
                 # After select a card Move with cursor to right
                 self.cursor_index_plus()
 
@@ -55,7 +56,7 @@ class InterfaceState:
         """
         if not self.selection_confirmed:
             self.my_program[self.cursor_index] = None
-            self.change_callback()
+            self.callback()
 
     def return_cards(self):
         """
@@ -65,7 +66,7 @@ class InterfaceState:
             for card in range(len(self.my_program)):
                 self.my_program[card] = None
             self.cursor_index = 0
-        self.change_callback()
+        self.callback()
 
     def cursor_index_plus(self):
         """
@@ -94,7 +95,7 @@ class InterfaceState:
                 self.power_down = True
             else:
                 self.power_down = False
-        self.change_callback()
+        self.callback()
 
     def confirm_selection(self):
         """
@@ -102,4 +103,4 @@ class InterfaceState:
         When is True the player ended the selection of cards.
         """
         self.selection_confirmed = True
-        self.change_callback()
+        self.callback()
