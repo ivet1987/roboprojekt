@@ -67,7 +67,7 @@ class Interface:
                         self.set_dealt_cards(message)
                         self.interface_state.timer = False
                     if "winner" in message:
-                        self.set_winner(message)
+                        self.state.winner = message["winner"]
                     if "timer_start" in message:
                         self.interface_state.timer = True
                     if "blocked_cards" in message:
@@ -119,15 +119,6 @@ class Interface:
         """
         cards = message["blocked_cards"]
         self.interface_state.blocked_cards = self.game_state.cards_from_dict(cards)
-        # print(self.interface_state.robot.name, "blocked cards", self.interface_state.blocked_cards)
-
-    def set_winner(self, message):
-        """
-        Set winner from received message.
-        """
-        winner = message["winner"]
-        self.interface_state.winner = winner
-
 
 def tick_asyncio(dt):
     """
