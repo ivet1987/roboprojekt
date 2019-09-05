@@ -98,7 +98,6 @@ class Interface:
                 index = self.interface_state.players.index(robot)
                 del self.interface_state.players[index]
                 del self.interface_state.my_program[self.interface_state.robot.unblocked_cards:]
-                # print("interface_program", self.interface_state.my_program)
 
     def set_dealt_cards(self, message):
         """
