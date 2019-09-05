@@ -16,7 +16,7 @@ class Interface:
     def __init__(self):
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text)
-        self.interface_state = InterfaceState(callback=self.send_state_to_server)
+        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
         self.game_state = None
 
         # Connection attribute
@@ -73,7 +73,7 @@ class Interface:
                     if "blocked_cards" in message:
                         self.set_blocked_cards(message)
                     if "round_over" in message:
-                        self.interface_state = InterfaceState(callback=self.send_state_to_server)
+                        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
 
         self.ws = None
 
