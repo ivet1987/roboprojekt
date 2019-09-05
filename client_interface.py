@@ -7,7 +7,7 @@ import asyncio
 import aiohttp
 import pyglet
 
-from interface_frontend import draw_interface, create_window, handle_text,  handle_click
+from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
 from backend import State
 
@@ -19,7 +19,7 @@ class Interface:
         self.window.push_handlers(
             on_draw=self.window_draw,
             on_text=self.on_text,
-            on_mouse_press=self.on_mouse_press, )
+            on_mouse_press=self.on_mouse_press,)
         self.state = InterfaceState()
         self.game_state = None
 
