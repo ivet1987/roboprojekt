@@ -1,5 +1,5 @@
 class InterfaceState:
-    def __init__(self):
+    def __init__(self, change_callback):
         self.dealt_cards = []
         self.robot = None
         #len(self.program) is the number of cards to select (0 - 5)
@@ -14,6 +14,9 @@ class InterfaceState:
         self.winner = []
         self.timer = False
         self.flag_count = 0
+        # Change_callback - callback function which is called with argument,
+        # when new InterfaceState is created
+        self.change_callback = change_callback
 
     def __repr__(self):
         return f"InterfaceState \
@@ -64,6 +67,7 @@ class InterfaceState:
             for card in range(len(self.program)):
                 self.program[card] = None
             self.cursor_index = 0
+        self.change_callback()
 
     def cursor_index_plus(self):
         """
@@ -92,6 +96,7 @@ class InterfaceState:
                 self.power_down = True
             else:
                 self.power_down = False
+        self.change_callback()
 
     def confirm_selection(self):
         """
