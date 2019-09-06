@@ -196,6 +196,7 @@ def test_power_down_can_be_switched(current_value, expected_value):
     interface_state.switch_power_down()
     assert interface_state.power_down is expected_value
 
+    
 def test_change_callback():
     """
     Test if change_callback function works and assert correct result.
