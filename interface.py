@@ -103,5 +103,6 @@ class InterfaceState:
         When indicator is False the player can choose cards and switch Power Down.
         When is True the player ended the selection of cards.
         """
-        self.selection_confirmed = True
-        self.change_callback()
+        if None not in self.program:
+            self.selection_confirmed = True
+            self.change_callback()
