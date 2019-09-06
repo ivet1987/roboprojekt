@@ -9,13 +9,12 @@ class InterfaceState:
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
         self.game_round = None
-        self.winner = None
+        # List of winners
+        self.winner = []
         self.timer = False
         self.flag_count = 0
-        # Assign the function that should be called within some InterfaceState methods,
-        # eg. after choosing or returning cards on hand,
-        # not on change of the purely visual elements of interface, like moving the cursor.
-        # Assigned function is be called after every robot-related interface state change.
+        # Change_callback - callback function which is called with argument,
+        # when new InterfaceState is created
         self.change_callback = change_callback
 
     def __repr__(self):
@@ -49,7 +48,7 @@ class InterfaceState:
                 return
             if dealt_card_index not in self.program:
                 self.program[self.cursor_index] = dealt_card_index
-                self.change_callback
+                self.change_callback()
                 # After select a card Move with cursor to right
                 self.cursor_index_plus()
 
@@ -59,7 +58,7 @@ class InterfaceState:
         """
         if not self.selection_confirmed:
             self.program[self.cursor_index] = None
-            self.change_callback
+            self.change_callback()
 
     def return_cards(self):
         """
@@ -69,7 +68,7 @@ class InterfaceState:
             for card in range(len(self.program)):
                 self.program[card] = None
             self.cursor_index = 0
-        self.change_callback
+        self.change_callback()
 
     def cursor_index_plus(self):
         """
@@ -98,7 +97,7 @@ class InterfaceState:
                 self.power_down = True
             else:
                 self.power_down = False
-        self.change_callback
+        self.change_callback()
 
     def confirm_selection(self):
         """
@@ -106,5 +105,5 @@ class InterfaceState:
         When is True the player ended the selection of cards.
         """
         if None not in self.program:
-            self.selection_confirmed = True
-            self.change_callback
+            self.confirm_selection = True
+            self.change_callback()
