@@ -17,7 +17,7 @@ class Interface:
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text)
         # When something has change in interfacestate, the function 'send_state_to_server' is called.
-        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
+        self.interface_state = InterfaceState(change_callback=self.send_state_to_server())
         self.game_state = None
 
         # Connection attribute
