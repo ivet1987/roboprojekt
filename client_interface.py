@@ -7,7 +7,7 @@ import asyncio
 import aiohttp
 import pyglet
 
-from interface_frontend import draw_interface, create_window, handle_text
+from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
 from backend import State
 

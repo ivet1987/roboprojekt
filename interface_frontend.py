@@ -420,6 +420,8 @@ def handle_text(interface_state, text):
 
 
 def handle_click(interface_state, x, y):
+    # Select a card and take it in your "hand"
+    # Selected card is in "GREEN" cursor
     card_sprite = cards_type_sprites["u_turn"]
     for i, coordinate in enumerate(dealt_cards_coordinates):
         coord_x, coord_y = coordinate
@@ -429,8 +431,16 @@ def handle_click(interface_state, x, y):
         ):
             interface_state.select_card(i)
 
+    # Confirm selection of cards
     if (
         688 < x < 688 + indicator_red_sprite.width
         and 864 < y < 864 + indicator_red_sprite.height
     ):
         interface_state.confirm_selection()
+
+    # Put and take a Power Down token
+    if (
+        210 < x < 210 + power_down_sprite.width
+        and 900 < y < 900 + power_down_sprite.height
+    ):
+        interface_state.switch_power_down()
