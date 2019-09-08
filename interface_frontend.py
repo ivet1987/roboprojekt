@@ -368,7 +368,7 @@ def draw_robot(i, robot, interface_state):
         (0, 0, 0, 255)
     )
     life_label.draw()
-    
+
     # Winner crown
     if interface_state.winner:
         if robot.winner:
@@ -417,3 +417,20 @@ def handle_text(interface_state, text):
     # Confirm selection of cards
     if text == 'k':
         interface_state.confirm_selection()
+
+
+def handle_click(interface_state, x, y):
+    card_sprite = cards_type_sprites["u_turn"]
+    for i, coordinate in enumerate(dealt_cards_coordinates):
+        coord_x, coord_y = coordinate
+        if (
+            coord_x < x < coord_x + card_sprite.width
+            and coord_y < y < coord_y + card_sprite.height
+        ):
+            interface_state.select_card(i)
+
+    if (
+        688 < x < 688 + indicator_red_sprite.width
+        and 864 < y < 864 + indicator_red_sprite.height
+    ):
+            interface_state.confirm_selection()
