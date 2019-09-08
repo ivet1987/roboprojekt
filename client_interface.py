@@ -18,7 +18,9 @@ class Interface:
         self.window = create_window()
         self.window.push_handlers(
             on_draw=self.window_draw,
-            on_text=self.on_text, )
+            on_text=self.on_text,
+            on_mouse_press=self.on_mouse_press,
+        )
         self.state = InterfaceState()
         self.game_state = None
 
@@ -39,6 +41,10 @@ class Interface:
         With every key press send interface state to server.
         """
         handle_text(self.state, text)
+        self.send_to_server(self.state.as_dict())
+
+    def on_mouse_press(self, x, y, button, mod):
+        handle_click(self.state, x, y)
         self.send_to_server(self.state.as_dict())
 
     def send_to_server(self, message):
