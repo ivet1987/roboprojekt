@@ -49,7 +49,7 @@ class InterfaceState:
                 return
             if dealt_card_index not in self.program:
                 self.program[self.cursor_index] = dealt_card_index
-                self.change_callback
+                self.change_callback()
                 # After select a card Move with cursor to right
                 self.cursor_index_plus()
 
@@ -59,7 +59,7 @@ class InterfaceState:
         """
         if not self.selection_confirmed:
             self.program[self.cursor_index] = None
-            self.change_callback
+            self.change_callback()
 
     def return_cards(self):
         """
@@ -69,7 +69,7 @@ class InterfaceState:
             for card in range(len(self.program)):
                 self.program[card] = None
             self.cursor_index = 0
-        self.change_callback
+        self.change_callback()
 
     def cursor_index_plus(self):
         """
@@ -98,7 +98,7 @@ class InterfaceState:
                 self.power_down = True
             else:
                 self.power_down = False
-        self.change_callback
+        self.change_callback()
 
     def confirm_selection(self):
         """
@@ -107,4 +107,4 @@ class InterfaceState:
         """
         if None not in self.program:
             self.selection_confirmed = True
-            self.change_callback
+            self.change_callback()
