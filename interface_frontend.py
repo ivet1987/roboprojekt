@@ -174,7 +174,7 @@ def draw_card(coordinate, card):
         y_priority,
         14,
         "right",
-        (255, 255, 255, 255)
+        (255, 255, 255, 255),
     )
     priority_label.draw()
 
@@ -338,7 +338,7 @@ def draw_robot(i, robot, interface_state):
         160,
         20,
         "right",
-        (0, 0, 0, 255)
+        (0, 0, 0, 255),
     )
     flag_label.draw()
 
@@ -359,7 +359,7 @@ def draw_robot(i, robot, interface_state):
         56,
         20,
         "right",
-        (0, 0, 0, 255)
+        (0, 0, 0, 255),
     )
     permanent_damage_label.draw()
 
