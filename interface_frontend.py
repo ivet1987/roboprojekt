@@ -427,11 +427,11 @@ def handle_text(interface_state, text):
 def handle_click(interface_state, x, y, window):
     # Select a card and take it in your "hand"
     # Selected card is in "GREEN" cursor
-    zoom_y = window.height / 1024
-    zoom_x = window.width / 768
-    new_x = x / zoom_x
-    new_y = y / zoom_y
+    new_x = x / (window.width / 768)
+    new_y = y / (window.height / 1024)
     print(new_x, new_y)
+    print("window width", window.width)
+    print("window height", window.height)
     card_sprite = cards_type_sprites["u_turn"]
     for i, coordinate in enumerate(dealt_cards_coordinates):
         coord_x, coord_y = coordinate
