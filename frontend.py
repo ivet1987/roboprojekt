@@ -6,6 +6,7 @@ The frontend module
 
 import pyglet
 from pathlib import Path
+from time import monotonic
 
 from interface_frontend import get_label
 
@@ -28,7 +29,10 @@ def get_sprite(img_path, x=0, y=0):
     return pyglet.sprite.Sprite(img, x, y)
 
 # Game over
-#game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
+# game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
+
+# Winner
+winner_sprite = get_sprite('img/interface/png/no_winner.png', x=170, y=200)
 
 
 def create_window(state):
@@ -109,7 +113,7 @@ def create_robot_sprite(robot):
     return robot_sprite
 
 
-def draw_state(state, window):
+def draw_state(state, time, window):
     """
     Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
 
@@ -141,5 +145,11 @@ def draw_state(state, window):
         for i, name in enumerate(state.winners):
             winner_name_label = get_label(str(name), 300 + 165 * i, state.tile_count[1] * TILE_HEIGHT + 10, 20, "right", (255, 255, 255, 255))
             winner_name_label.draw()
+
+        seconds = 5 - (monotonic() - time)
+        if (0 < seconds < 5):
+            winner_sprite.draw()
+            winner_label = get_label(str(name), (state.tile_count[0] * TILE_WIDTH) / 2 - 50, 450 - i * 50, 26, "center", (255, 0, 0, 255))
+            winner_label.draw()
 
     pyglet.gl.glPopMatrix()
