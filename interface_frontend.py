@@ -223,7 +223,7 @@ def draw_interface(interface_state, game_state, window):
     if game_state is not None:
         players = []
         for robot in game_state.robots:
-            if interface_state.robot.name not in robot.name:
+            if interface_state.robot and interface_state.robot.name != robot.name:
                 players.append(robot)
 
         # Other robots background
