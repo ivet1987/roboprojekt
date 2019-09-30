@@ -242,6 +242,10 @@ def draw_interface(interface_state, game_state, window):
             flag_slot_sprite.y = 933
             flag_slot_sprite.draw()
 
+        # Game over
+        if interface_state.robot is None:
+            game_over_sprite.draw()
+
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
         if card_index is not None:
