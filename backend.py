@@ -4,6 +4,7 @@ Backend file contains functions for the game logic.
 from pathlib import Path
 from collections import OrderedDict
 from random import shuffle
+import yaml
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
@@ -22,6 +23,10 @@ class CardNotKnownError(LookupError):
     """Raised when a card doesn't belong to any known type."""
 
 
+with open('robots.yaml', encoding='utf-8') as file:
+    robot_info = yaml.safe_load(file)
+
+
 class Robot:
     def __init__(self, direction, coordinates, name):
         self.direction = direction
@@ -37,6 +42,7 @@ class Robot:
         self.selection_confirmed = False
         self.card_indexes = []
         self.winner = False
+        self.displayed_name = robot_info[self.name]["displayed_name"]
 
     @property
     # More info about @property decorator - official documentation:
