@@ -25,7 +25,7 @@ class CardNotKnownError(LookupError):
 
 with open('robots.yaml', encoding='utf-8') as file:
     robot_info = yaml.safe_load(file)
-
+    print(robot_info)
 
 class Robot:
     def __init__(self, direction, coordinates, name):
@@ -848,11 +848,9 @@ def get_robot_names():
     """
     Return a list of robots names (names of the files with robots avatars).
     """
-    robot_names = []
-    for img in Path('./img/robots_map/png').iterdir():
-        robot_name = img.stem
-        robot_names.append(robot_name)
-    robot_names.sort()
+    robot_names = list(robot_info.keys())
+    
+    print(robot_names)
     return robot_names
 
 
