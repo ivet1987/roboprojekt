@@ -32,7 +32,7 @@ def get_sprite(img_path, x=0, y=0):
 # game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 
 # Winner
-#winner_sprite = get_sprite('img/interface/png/no_winner.png', x=170, y=200)
+winner_sprite = get_sprite('img/interface/png/game_winner.png', x=170, y=200)
 
 
 def create_window(state):
