@@ -493,7 +493,7 @@ class State:
         return {"robots": [robot.as_dict() for robot in self.robots]}
 
     @classmethod
-    def get_start_state(cls, map_name):
+    def get_start_state(cls, map_name, players):
         """
         Get start state of game.
 
@@ -501,7 +501,7 @@ class State:
         initialize State object with them.
         """
         board = get_board(map_name)
-        robots_start = create_robots(board)
+        robots_start = create_robots(board, players)
         state = cls(board, robots_start)
         for robot in state.robots:
             state.deal_cards(robot)
@@ -874,7 +874,7 @@ def get_robot_names():
     return robot_names
 
 
-def get_start_tiles(board, tile_type="start"):
+def get_start_tiles(board, players, tile_type="start"):
     """
     Get initial tiles for robots. It can be either start or stop tiles.
 
@@ -893,8 +893,9 @@ def get_start_tiles(board, tile_type="start"):
     for coordinate, tiles in board.items():
         for tile in tiles:
             if tile.type == tile_type:
-                robot_tiles[tile.number] = {"coordinates": coordinate,
-                                            "tile_direction": tile.direction}
+                if len(robot_tiles) < players:
+                    robot_tiles[tile.number] = {"coordinates": coordinate,
+                                                "tile_direction": tile.direction}
 
     # Sort created dictionary by the first element - start tile number
     robot_tiles = OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
@@ -902,7 +903,7 @@ def get_start_tiles(board, tile_type="start"):
     return robot_tiles
 
 
-def create_robots(board):
+def create_robots(board, players):
     """
     Place robots on start tiles.
 
@@ -914,7 +915,7 @@ def create_robots(board):
     Robots are placed on board in the direction of their start tiles.
     The robots are ordered according to their start tiles.
     """
-    start_tiles = get_start_tiles(board)
+    start_tiles = get_start_tiles(board, players)
     robots_on_start = []
     robot_names = get_robot_names()
 
