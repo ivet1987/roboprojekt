@@ -910,6 +910,7 @@ def get_start_tiles(board, players, tile_type="start"):
     By default it is "start", which results in reading classic start tiles.
     Create an ordered dictionary of all initial tiles in the board with initial
     tile number as a key and values: coordinates and tile_direction.
+    Number of start tiles depends on the optional number of players.
     OrderedDict is a structure that ensures the dictionary is stored
     in the order of the new keys being added.
     """
