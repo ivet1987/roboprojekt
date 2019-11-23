@@ -920,7 +920,7 @@ def get_start_tiles(board, players, tile_type="start"):
     for coordinate, tiles in board.items():
         for tile in tiles:
             if tile.type == tile_type:
-                if len(robot_tiles) < players:
+                if len(robot_tiles) < int(players):
                     robot_tiles[tile.number] = {"coordinates": coordinate,
                                                 "tile_direction": tile.direction}
 
