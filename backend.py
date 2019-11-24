@@ -504,6 +504,10 @@ class State:
         return {"robots": [robot.as_dict() for robot in self.robots]}
 
     def record_log(self):
+        new_entry = self.robots_as_dict()
+        if self.log and self.log[-1] == new_entry:
+            # The new entry is the same as the previous one.
+            return
         self.log.append(self.robots_as_dict())
 
     @classmethod
