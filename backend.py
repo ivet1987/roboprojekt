@@ -511,7 +511,7 @@ class State:
         if self.log and self.log[-1] == new_entry:
             # The new entry is the same as the previous one.
             return
-        self.log.append(self.robots_as_dict())
+        self.log.append(new_entry)
 
     @classmethod
     def get_start_state(cls, map_name):
