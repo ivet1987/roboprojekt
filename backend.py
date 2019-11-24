@@ -201,11 +201,12 @@ class Robot:
         """
         self.walk(distance=distance, state=state, direction=direction, push_others=False)
 
-    def die(self):
+    def die(self, state):
         """
         Robot lose life and skip rest of game round.
         Robot is moved out of game board for the rest of the round.
         """
+        state.record_log()
         if self.lives > 0:
             self.lives -= 1
 
@@ -213,6 +214,7 @@ class Robot:
             self.permanent_damages += 1
 
         self.coordinates = None
+        state.record_log()
 
     def rotate(self, where_to, state):
         """
@@ -283,7 +285,7 @@ class Robot:
             self.damages += strength
         else:
             # Robot is damaged so much that laser kills it.
-            self.die()
+            self.die(state)
         state.record_log()
 
     def clear_robot_attributes(self, state):
