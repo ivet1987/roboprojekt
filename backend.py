@@ -143,7 +143,7 @@ class Robot:
         state.past_deck.extend(available_cards)
         available_cards.clear()
 
-    def walk(self, distance, state, direction=None, push_others=True):
+    def walk(self, distance, state, direction=None, push_others=True, log=True):
         """
         Move a robot to next coordinates based on his direction.
         Optional argument:
@@ -173,7 +173,8 @@ class Robot:
                 # Move robot in the way.
                 if robot_in_the_way:
                     if push_others:
-                        robot_in_the_way.walk(1, state, direction)
+                        # Move other robot, but don't log it as a separate action
+                        robot_in_the_way.walk(1, state, direction, log=False)
                         # Check that robot moved.
                         if robot_in_the_way.coordinates == next_coordinates:
                             break
@@ -182,12 +183,13 @@ class Robot:
 
                 # Robot walks to next coordinates.
                 self.coordinates = next_coordinates
+                if log:
+                    state.record_log()
                 # Check hole on next coordinates.
                 self.fall_into_hole(state)
                 # If robot falls into hole, he becomes inactive.
                 if self.inactive:
                     break
-                state.record_log()
 
     def move(self, direction, distance, state):
         """
