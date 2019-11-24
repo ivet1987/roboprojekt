@@ -8,7 +8,7 @@ import pyglet
 from pathlib import Path
 from time import monotonic
 from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite, window_zoom
-
+import math
 
 # Loading of tiles and robots images
 loaded_tiles_images = {}
@@ -133,6 +133,22 @@ def create_robot_sprite(robot, last_robot, animation_pos):
         scale2 = 1
     scale = lerp(scale1, scale2, animation_pos)
 
+    # Show change in damage by animating the color:
+    # - when damage is received, fade to red (255, 0, 0)
+    # - when healed, fade to green (0, 255, 0)
+    # - otherwise, keep normal colors (255, 255, 255)
+    # Additionally, wiggle the robot by changing its rotation.
+    fading_color = 255 * (1 - animation_pos)
+    if robot.damages > last_robot.damages:
+        color = 255, fading_color, fading_color
+        rotation += math.sin(animation_pos * math.pi * 4) * 10
+    elif robot.damages < last_robot.damages:
+        color = fading_color, 255, fading_color
+        rotation += math.sin(animation_pos * math.pi * 2) * 10
+    else:
+        color = 255, 255, 255
+    animation_pos = monotonic() / 0.2
+
     # Prepare the sprite
     img = loaded_robots_images[robot.name]
     img.anchor_x = img.width//2
@@ -143,6 +159,7 @@ def create_robot_sprite(robot, last_robot, animation_pos):
                                              y=img.anchor_y + robot_y)
     robot_sprite.rotation = rotation
     robot_sprite.scale = scale
+    robot_sprite.color = color
     return robot_sprite
 
 
