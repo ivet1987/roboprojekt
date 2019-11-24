@@ -228,10 +228,11 @@ class Robot:
         Check tiles on robot's coordinates for HoleTile and apply its effect.
         """
 
-        for tile in state.get_tiles(self.coordinates):
-            tile.kill_robot(state, self)
-            if self.inactive:
-                break
+        if self.coordinates != None:
+            for tile in state.get_tiles(self.coordinates):
+                tile.kill_robot(state, self)
+                if self.inactive:
+                    break
 
     def shoot(self, state):
         """
