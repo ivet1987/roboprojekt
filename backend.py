@@ -639,8 +639,9 @@ class State:
                     # Check if the next tile is rotating belt.
                     for tile in self.get_tiles(robots_next_coordinates[robot]):
                         tile.rotate_robot_on_belt(robot, direction, self)
-                    self.record_log()
                 robot.coordinates = robots_next_coordinates[robot]
+            self.record_log()
+            for robot in self.robots:
                 robot.fall_into_hole(self)
 
     def get_next_coordinates_for_belts(self, express_belts):
