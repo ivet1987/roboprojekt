@@ -59,8 +59,9 @@ class Receiver:
         After the given delay (in seconds), repeat.
         """
         while True:
-            if self.log_to_play:
+            if self.state:
                 self.reset_last_robots()
+            if self.log_to_play:
                 self.animation_start = monotonic()
                 new_state = self.log_to_play.pop(0)
                 if new_state == None:
