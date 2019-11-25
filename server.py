@@ -253,9 +253,9 @@ def get_app(server):
 @click.command()
 @click.option("-m", "--map-name", default="maps/test_winner.json",
               help="Name of the played map.")
-@click.option("-p", "--players", default=8, help="Number of players")
+@click.option("-p", "--players", default=8, type=int, help="Number of players")
 def main(map_name, players):
-    server = Server(map_name, players)
+    server = Server(map_name, players=True)
     app = get_app(server)
     web.run_app(app)
 
