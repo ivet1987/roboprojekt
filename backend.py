@@ -512,7 +512,7 @@ class State:
         initialize State object with them.
         """
         board = get_board(map_name)
-        robots_start = create_robots(board, players)
+        robots_start = create_robots(board, players=None)
         state = cls(board, robots_start)
         for robot in state.robots:
             state.deal_cards(robot)
@@ -920,7 +920,7 @@ def get_start_tiles(board, players=None, tile_type="start"):
     for coordinate, tiles in board.items():
         for tile in tiles:
             if tile.type == tile_type:
-                if len(robot_tiles) < players:
+                if len(robot_tiles) < int(players):
                     robot_tiles[tile.number] = {"coordinates": coordinate,
                                                 "tile_direction": tile.direction}
                 else:
@@ -944,7 +944,7 @@ def create_robots(board, players=None):
     Robots are placed on board in the direction of their start tiles.
     The robots are ordered according to their start tiles.
     """
-    start_tiles = get_start_tiles(board, players)
+    start_tiles = get_start_tiles(board, players=None)
     robots_on_start = []
     robot_names = get_robot_names()
 

@@ -31,7 +31,7 @@ class Server:
     def __init__(self, map_name, players):
         # Attributes related to game logic
         self.map_name = map_name
-        self.state = State.get_start_state(map_name, players)
+        self.state = State.get_start_state(map_name, players=None)
         self.available_robots = list(self.state.robots)
         # Dictionary {robot_name: ws_interface}
         self.assigned_robots = {}
@@ -254,8 +254,8 @@ def get_app(server):
 @click.option("-m", "--map-name", default="maps/test_winner.json",
               help="Name of the played map.")
 @click.option("-p", "--players", default=8, type=int, help="Number of players")
-def main(map_name, players):
-    server = Server(map_name, players=True)
+def main(map_name, players=None):
+    server = Server(map_name, players=None)
     app = get_app(server)
     web.run_app(app)
 
