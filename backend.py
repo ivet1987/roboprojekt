@@ -504,7 +504,7 @@ class State:
         self.log.append(self.robots_as_dict())
 
     @classmethod
-    def get_start_state(cls, map_name, players):
+    def get_start_state(cls, map_name, players=None):
         """
         Get start state of game.
 
