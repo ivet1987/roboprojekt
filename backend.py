@@ -900,7 +900,7 @@ def get_robot_names():
     return robot_names
 
 
-def get_start_tiles(board, players=None, tile_type="start"):
+def get_start_tiles(board, tile_type="start", players=None):
     """
     Get initial tiles for robots. It can be either start or stop tiles.
 
@@ -916,15 +916,18 @@ def get_start_tiles(board, players=None, tile_type="start"):
     """
 
     robot_tiles = {}
-
     for coordinate, tiles in board.items():
         for tile in tiles:
             if tile.type == tile_type:
-                if len(robot_tiles) < int(players):
+                if players is not None:
+                    if len(robot_tiles) < players:
+                        robot_tiles[tile.number] = {"coordinates": coordinate,
+                                                    "tile_direction": tile.direction}
+                    else:
+                        break
+                else:
                     robot_tiles[tile.number] = {"coordinates": coordinate,
                                                 "tile_direction": tile.direction}
-                else:
-                    break
 
     # Sort created dictionary by the first element - start tile number
     robot_tiles = OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
