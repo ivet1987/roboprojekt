@@ -514,7 +514,7 @@ class State:
         self.log.append(new_entry)
 
     @classmethod
-    def get_start_state(cls, map_name, players=None):
+    def get_start_state(cls, map_name, players):
         """
         Get start state of game.
 
@@ -522,7 +522,7 @@ class State:
         initialize State object with them.
         """
         board = get_board(map_name)
-        robots_start = create_robots(board, players=None)
+        robots_start = create_robots(board, players)
         state = cls(board, robots_start)
         for robot in state.robots:
             state.deal_cards(robot)
@@ -911,7 +911,7 @@ def get_robot_names():
     return robot_names
 
 
-def get_start_tiles(board, tile_type="start", players=None):
+def get_start_tiles(board, players, tile_type="start"):
     """
     Get initial tiles for robots. It can be either start or stop tiles.
 
@@ -930,15 +930,11 @@ def get_start_tiles(board, tile_type="start", players=None):
     for coordinate, tiles in board.items():
         for tile in tiles:
             if tile.type == tile_type:
-                if players is not None:
-                    if len(robot_tiles) < players:
-                        robot_tiles[tile.number] = {"coordinates": coordinate,
-                                                    "tile_direction": tile.direction}
-                    else:
-                        break
-                else:
+                if len(robot_tiles) < players:
                     robot_tiles[tile.number] = {"coordinates": coordinate,
                                                 "tile_direction": tile.direction}
+                else:
+                    break
 
     # Sort created dictionary by the first element - start tile number
     robot_tiles = OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
@@ -946,7 +942,7 @@ def get_start_tiles(board, tile_type="start", players=None):
     return robot_tiles
 
 
-def create_robots(board, players=None):
+def create_robots(board, players):
     """
     Place robots on start tiles.
 
@@ -958,7 +954,7 @@ def create_robots(board, players=None):
     Robots are placed on board in the direction of their start tiles.
     The robots are ordered according to their start tiles.
     """
-    start_tiles = get_start_tiles(board, players=None)
+    start_tiles = get_start_tiles(board, players)
     robots_on_start = []
     robot_names = get_robot_names()
 
