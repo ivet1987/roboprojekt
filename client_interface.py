@@ -61,7 +61,8 @@ class Interface:
         """
         When windows is closed, WebSocket is disconnected.
         """
-        asyncio.ensure_future(self.ws.close())
+        if self.ws is not None:
+            asyncio.get_event_loop().create_task(self.ws.close())
 
     def send_state_to_server(self):
         """
