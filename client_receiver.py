@@ -102,12 +102,14 @@ class Receiver:
 @click.option("-h", "--hostname", default="localhost",
               help="Server's hostname.")
 def main(hostname):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     receiver = Receiver(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
-    asyncio.ensure_future(receiver.get_game_state())
+    loop.create_task(receiver.get_game_state())
     pyglet.app.run()
 
 

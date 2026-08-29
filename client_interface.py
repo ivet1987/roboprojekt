@@ -154,9 +154,11 @@ def run_from_welcome_board(robot_name, own_robot_name, hostname):
 @click.option("-r", "--robot-name", default="",
               help="Choose robot's name directly from the command line.")
 def main(hostname, robot_name):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     interface = Interface(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-    asyncio.ensure_future(interface.get_messages(robot_name))
+    loop.create_task(interface.get_messages(robot_name))
     pyglet.app.run()
 
 
