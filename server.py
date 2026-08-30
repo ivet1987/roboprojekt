@@ -135,7 +135,9 @@ class Server:
 
             # Now send updates to all clients (after this client has game_state)
             await self.send_message(self.available_robots_as_dict())
+            # Send robots state (for interface client) and log (for receiver client)
             await self.send_message(self.state.robots_as_dict())
+            await self.send_message({'log': [self.state.robots_as_dict()]})
 
             # React to the sent state of this client and send new state to all
             async for message in ws:
@@ -191,6 +193,9 @@ class Server:
         # Robot is already in state.robots, just deal cards
         self.state.start_coordinates.append(start_position['coordinates'])
         self.state.deal_cards(robot)
+
+        # Log robot appearing on map so receiver client can see it
+        self.state.record_log()
 
         self.assigned_robots[robot.name] = ws
         # Whenever robot is assigned to the client, unset his selection.
