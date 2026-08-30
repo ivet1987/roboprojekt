@@ -32,6 +32,7 @@ class Robot:
         self.direction = direction
         self.coordinates = coordinates
         self.start_coordinates = [coordinates]
+        self.round_start_position = coordinates  # Position at start of current round
         self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
@@ -314,20 +315,25 @@ class Robot:
 
     def find_free_start(self, state):
         """
-        Check the possible start coodinates from the last in the list.
-        If no other robots stand on them, set current coordinates there. If there stands another robot,
-        check the next until you get the free ones.
-        When the history of robot's own coordinates ends,
-        iterate through the other start tiles coordinates.
+        Return robot to position where it started the previous round.
+        If that position is occupied, try original start positions.
         """
-        last_robot_starts = list(reversed(self.start_coordinates))
-        last_robot_starts.extend(state.start_coordinates)
-        for last_coordinates in last_robot_starts:
+        # First try position from start of last round
+        positions_to_try = []
+        if self.round_start_position is not None:
+            positions_to_try.append(self.round_start_position)
+        # Then try original start positions
+        positions_to_try.extend(state.start_coordinates)
+
+        for position in positions_to_try:
+            # Check if position is free
+            occupied = False
             for robot in state.robots:
-                if robot.coordinates == last_coordinates:
+                if robot.coordinates == position:
+                    occupied = True
                     break
-            else:
-                self.coordinates = last_coordinates
+            if not occupied:
+                self.coordinates = position
                 break
 
     def select_blocked_cards_from_program(self):
@@ -803,6 +809,10 @@ class State:
         """
         # Only process active robots (those with coordinates - selected by players)
         active_robots = [r for r in self.robots if r.coordinates is not None]
+
+        # Save current position as round start position (for respawn after death)
+        for robot in active_robots:
+            robot.round_start_position = robot.coordinates
 
         for robot in active_robots:
             robot.select_cards(self)
