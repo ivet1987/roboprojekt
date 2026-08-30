@@ -193,8 +193,8 @@ def draw_interface(interface_state, game_state, winner_time, window):
         if game_state is not None:
             players = []
             for robot in game_state.robots:
-                # Only show active robots (selected by players), exclude own robot
-                if hasattr(robot, 'is_active') and not robot.is_active:
+                # Only show robots with coordinates (selected by players), exclude own robot
+                if robot.coordinates is None:
                     continue
                 if interface_state.robot and interface_state.robot.name != robot.name:
                     players.append(robot)
