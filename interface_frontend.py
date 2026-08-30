@@ -248,7 +248,7 @@ def draw_interface(interface_state, game_state, winner_time, window):
         # Timer
         if interface_state.timer is not None:
             seconds = monotonic() - interface_state.timer
-            seconds_left = round(30-seconds)
+            seconds_left = max(0, round(30-seconds))
             timer_label = get_label(
                 # format'02' means that number has always 2 digits,
                 # shorter is filled with '0' before it.
