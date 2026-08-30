@@ -12,7 +12,7 @@ from backend import State
 from frontend import draw_state, create_window
 
 # How long one state from the log should be displayed (in seconds)
-LOG_FRAME_TIME = 0.2
+LOG_FRAME_TIME = 0.5
 
 
 class Receiver:
