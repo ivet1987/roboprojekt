@@ -796,14 +796,17 @@ class State:
         Check if somebody has won.
         Robots' attributes are cleared and new cards dealt.
         """
-        for robot in self.robots:
+        # Only process active robots (those with coordinates - selected by players)
+        active_robots = [r for r in self.robots if r.coordinates is not None]
+
+        for robot in active_robots:
             robot.select_cards(self)
             if robot.power_down:
                 robot.damages = 0
         self.apply_all_effects()
         self.check_winner()
         self.game_round += 1
-        for robot in self.robots:
+        for robot in active_robots:
             robot.clear_robot_attributes(self)
             self.deal_cards(robot)
 
