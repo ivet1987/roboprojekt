@@ -132,6 +132,8 @@ class Server:
         # and assign it to client
         robot = self.assign_robot_to_client(request.match_info.get("robot_name"), ws)
         await self.send_message(self.available_robots_as_dict())
+        # Send updated robot states to all clients (especially the map viewer)
+        await self.send_message(self.state.robots_as_dict())
 
         try:
             # Prepare message to send: robot name, game state and cards
@@ -164,6 +166,8 @@ class Server:
             robot.selection_confirmed = False
             self.available_robots.append(robot)
             await self.send_message(self.available_robots_as_dict())
+            # Send updated robot states to map viewer
+            await self.send_message(self.state.robots_as_dict())
 
     def assign_robot_to_client(self, robot_name, ws):
         """
