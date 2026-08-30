@@ -59,9 +59,10 @@ class Receiver:
         After the given delay (in seconds), repeat.
         """
         while True:
-            if self.state:
-                self.reset_last_robots()
             if self.log_to_play:
+                # Save current state as animation starting point
+                if self.state:
+                    self.reset_last_robots()
                 self.animation_start = monotonic()
                 new_state = self.log_to_play.pop(0)
                 if new_state == None:
@@ -92,7 +93,8 @@ class Receiver:
                     if "robots" in message:
                         # Update robots when they change (e.g., player selects a robot)
                         self.state.robots = self.state.robots_from_dict(message)
-                        self.reset_last_robots()
+                        # DON'T call reset_last_robots() here - it causes animation glitches
+                        # because the log animation will handle the transitions
                     if 'log' in message:
                         self.log_to_play.extend(message['log'])
                     if "winner" in message:
