@@ -33,10 +33,8 @@ class Server:
         self.map_name = map_name
         self.max_players = players
 
-        # Create empty game state with board but no robots yet
+        # Create game state with board
         board = get_board(map_name)
-        self.state = State(board, [])
-        self.state.start_coordinates = []
 
         # Get start positions for robots
         start_tiles = get_start_tiles(board)
@@ -48,13 +46,20 @@ class Server:
                 'direction': tile_info['tile_direction']
             })
 
-        # Create ALL available robots for selection (not on board yet)
+        # Create ALL robots for selection (they will be inactive until chosen)
         robot_names = get_robot_names()
-        self.available_robots = []
+        all_robots = []
         for name in robot_names:
-            # Create robot with no position (inactive)
+            # Create robot with no position (inactive) - they appear on welcome board
             robot = Robot(direction=0, coordinates=None, name=name)
-            self.available_robots.append(robot)
+            all_robots.append(robot)
+
+        # Create state with all robots (they're inactive until assigned)
+        self.state = State(board, all_robots)
+        self.state.start_coordinates = []
+
+        # All robots are available for selection at start
+        self.available_robots = list(self.state.robots)
 
         # Dictionary {robot_name: ws_interface}
         self.assigned_robots = {}
@@ -133,18 +138,15 @@ class Server:
             return ws
 
         finally:
-            # Deleted robot from assigned and return him to available robots
-            # Remove robot from game state and make it inactive
+            # Delete robot from assigned and return him to available robots
             del self.assigned_robots[robot.name]
-            if robot in self.state.robots:
-                robot_index = self.state.robots.index(robot)
-                self.state.robots.remove(robot)
-                # Also remove from start_coordinates
-                if robot_index < len(self.state.start_coordinates):
-                    self.state.start_coordinates.pop(robot_index)
-            # Make robot inactive again (no position on board)
+            # Find robot's start coordinate and remove it
+            if robot.start_coordinates and robot.start_coordinates[0] in self.state.start_coordinates:
+                self.state.start_coordinates.remove(robot.start_coordinates[0])
+            # Make robot inactive again (no position on board, stays in state.robots)
             robot.coordinates = None
             robot.direction = 0
+            robot.start_coordinates = []
             robot.selection_confirmed = False
             self.available_robots.append(robot)
             await self.send_message(self.available_robots_as_dict())
@@ -173,14 +175,13 @@ class Server:
         else:
             robot = self.available_robots.pop(0)
 
-        # Place robot on next available start position
+        # Place robot on next available start position (activate it)
         start_position = self.start_positions[len(self.assigned_robots)]
         robot.coordinates = start_position['coordinates']
         robot.direction = start_position['direction']
         robot.start_coordinates = [start_position['coordinates']]
 
-        # Add robot to game state
-        self.state.robots.append(robot)
+        # Robot is already in state.robots, just activate it and deal cards
         self.state.start_coordinates.append(start_position['coordinates'])
         self.state.deal_cards(robot)
 
@@ -226,14 +227,16 @@ class Server:
         started or game round is played.
         """
         robot.selection_confirmed = True
-        confirmed_count = self.state.count_confirmed_selections()
-        # Only count assigned robots (active players)
-        assigned_robot_count = len(self.assigned_robots)
+        # Count only active robots (those with coordinates - assigned to players)
+        active_robots = [r for r in self.state.robots if r.coordinates is not None]
+        active_robot_count = len(active_robots)
+        # Count confirmations only for active robots
+        confirmed_count = sum(1 for r in active_robots if r.selection_confirmed)
         # If last robot doesnt selected his cards, the timer starts.
-        if confirmed_count == assigned_robot_count - 1:
+        if confirmed_count == active_robot_count - 1:
             await self.send_message("timer_start")
             asyncio.create_task(self.timer(self.state.game_round))
-        if confirmed_count == assigned_robot_count:
+        if confirmed_count == active_robot_count:
             await self.play_game_round()
 
     async def play_game_round(self):
