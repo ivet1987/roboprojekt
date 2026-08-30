@@ -88,7 +88,8 @@ class Robot:
                  "selection_confirmed": self.selection_confirmed,
                  "unblocked_cards": self.unblocked_cards,
                  "winner": self.winner,
-                 "displayed_name": self.displayed_name}}
+                 "displayed_name": self.displayed_name,
+                 "is_active": getattr(self, 'is_active', True)}}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -112,6 +113,7 @@ class Robot:
         robot.selection_confirmed = robot_description["selection_confirmed"]
         robot.winner = robot_description["winner"]
         robot.displayed_name = robot_description["displayed_name"]
+        robot.is_active = robot_description.get("is_active", True)
         return robot
 
     def select_cards(self, state):
