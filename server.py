@@ -131,9 +131,6 @@ class Server:
         # Get first data for connected client: robot and cards
         # and assign it to client
         robot = self.assign_robot_to_client(request.match_info.get("robot_name"), ws)
-        await self.send_message(self.available_robots_as_dict())
-        # Send updated robot states to all clients (especially the map viewer)
-        await self.send_message(self.state.robots_as_dict())
 
         try:
             # Prepare message to send: robot name, game state and cards
@@ -147,6 +144,10 @@ class Server:
                 }
             # Send the message to the connected client
             await ws.send_json(welcome_message)
+
+            # Now send updates to all clients (after this client has game_state)
+            await self.send_message(self.available_robots_as_dict())
+            await self.send_message(self.state.robots_as_dict())
 
             # React to the sent state of this client and send new state to all
             async for message in ws:
