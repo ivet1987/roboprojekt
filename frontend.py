@@ -59,8 +59,11 @@ def load_robots(state, last_robots, animation_pos):
     state: State object containing game board and robots
     """
     robot_sprites = []
-    # Only active robots will be drawn.
+    # Only active robots (selected by players) will be drawn on map.
     for robot in state.robots:
+        # Skip inactive robots (not selected by players yet)
+        if hasattr(robot, 'is_active') and not robot.is_active:
+            continue
         last_robot = last_robots.get(robot.name, robot)
         robot_sprite = create_robot_sprite(robot, last_robot, animation_pos)
         if robot_sprite != None:
