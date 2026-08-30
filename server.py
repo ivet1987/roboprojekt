@@ -12,6 +12,7 @@ import click
 from aiohttp import web
 
 from backend import State, Robot, get_robot_names, get_start_tiles, get_board
+from util_backend import Direction
 
 
 class Server:
@@ -51,7 +52,7 @@ class Server:
         all_robots = []
         for name in robot_names:
             # Create robot with no position (inactive) - they appear on welcome board
-            robot = Robot(direction=0, coordinates=None, name=name)
+            robot = Robot(direction=Direction.N, coordinates=None, name=name)
             all_robots.append(robot)
 
         # Create state with all robots (they're inactive until assigned)
@@ -145,7 +146,7 @@ class Server:
                 self.state.start_coordinates.remove(robot.start_coordinates[0])
             # Make robot inactive again (no position on board, stays in state.robots)
             robot.coordinates = None
-            robot.direction = 0
+            robot.direction = Direction.N
             robot.start_coordinates = []
             robot.selection_confirmed = False
             self.available_robots.append(robot)
