@@ -89,6 +89,10 @@ class Receiver:
                             self.window = create_window(self.state, self.window_draw)
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
+                    if "robots" in message:
+                        # Update robots when they change (e.g., player selects a robot)
+                        self.state.robots = self.state.robots_from_dict(message)
+                        self.reset_last_robots()
                     if 'log' in message:
                         self.log_to_play.extend(message['log'])
                     if "winner" in message:
