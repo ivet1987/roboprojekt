@@ -185,6 +185,10 @@ class Robot:
                 self.coordinates = next_coordinates
                 if log:
                     state.record_log()
+                # Check and collect flag on this tile
+                for tile in state.get_tiles(self.coordinates):
+                    tile.collect_flag(self)
+                    tile.set_new_start(self)
                 # Check hole on next coordinates.
                 self.fall_into_hole(state)
                 # If robot falls into hole, he becomes inactive.
@@ -717,12 +721,6 @@ class State:
         # Activate robot laser
         for robot in self.get_active_robots():
             robot.shoot(self)
-
-        # Collect flags, repair robots
-        for robot in self.get_active_robots():
-            for tile in self.get_tiles(robot.coordinates):
-                tile.collect_flag(robot)
-                tile.set_new_start(robot)
 
     def set_robots_for_new_turn(self):
         """
