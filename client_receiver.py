@@ -8,7 +8,7 @@ import click
 from time import monotonic
 from util_network import tick_asyncio
 
-from backend import State
+from backend import State, Robot
 from frontend import draw_state, create_window
 
 # How long one state from the log should be displayed (in seconds)
@@ -49,8 +49,13 @@ class Receiver:
 
     def reset_last_robots(self):
         """Set the starting point of the animation to the current state.
+        Make copies of robots so changes don't affect the animation baseline.
         """
-        self.last_robots = {robot.name: robot for robot in self.state.robots}
+        self.last_robots = {}
+        for robot in self.state.robots:
+            # Create a copy of the robot by serializing and deserializing
+            robot_copy = Robot.from_dict(robot.as_dict())
+            self.last_robots[robot.name] = robot_copy
 
     async def tick_log(self):
         """
