@@ -130,7 +130,7 @@ class Interface:
             if robot.name == robot_name:
                 self.interface_state.robot = robot
                 if own_robot_name != "":
-                    robot.displayed_name == own_robot_name
+                    robot.displayed_name = own_robot_name  # Fixed: = instead of ==
 
     def set_blocked_cards(self, cards):
         """
