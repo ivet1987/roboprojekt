@@ -273,7 +273,6 @@ class RepairTile(Tile):
         # Remove one robot damage.
         if robot.damages > 0:
             robot.damages -= 1
-            state.record_log()
             return True
 
     def set_new_start(self, robot):
