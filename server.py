@@ -39,21 +39,34 @@ class Server:
 
         # Get start positions for robots
         start_tiles = get_start_tiles(board)
-        self.start_positions = []
-        for start_tile_number in sorted(start_tiles.keys())[:players]:
+
+        # Create ALL robots for selection with their start positions
+        robot_names = get_robot_names()
+        all_robots = []
+        start_tile_keys = sorted(start_tiles.keys())
+
+        for i, name in enumerate(robot_names):
+            # Give each robot a start position (cycle through available start tiles)
+            start_tile_key = start_tile_keys[i % len(start_tile_keys)]
+            tile_info = start_tiles[start_tile_key]
+
+            # Create robot with start position (they appear on map)
+            robot = Robot(
+                direction=tile_info['tile_direction'],
+                coordinates=tile_info['coordinates'],
+                name=name
+            )
+            robot.is_active = False  # Mark as inactive (not selected by player yet)
+            all_robots.append(robot)
+
+        # Remember which start positions are for actual players
+        self.player_start_positions = []
+        for start_tile_number in start_tile_keys[:players]:
             tile_info = start_tiles[start_tile_number]
-            self.start_positions.append({
+            self.player_start_positions.append({
                 'coordinates': tile_info['coordinates'],
                 'direction': tile_info['tile_direction']
             })
-
-        # Create ALL robots for selection (they will be inactive until chosen)
-        robot_names = get_robot_names()
-        all_robots = []
-        for name in robot_names:
-            # Create robot with no position (inactive) - they appear on welcome board
-            robot = Robot(direction=Direction.N, coordinates=None, name=name)
-            all_robots.append(robot)
 
         # Create state with all robots (they're inactive until assigned)
         self.state = State(board, all_robots)
@@ -144,9 +157,9 @@ class Server:
             # Find robot's start coordinate and remove it
             if robot.start_coordinates and robot.start_coordinates[0] in self.state.start_coordinates:
                 self.state.start_coordinates.remove(robot.start_coordinates[0])
-            # Make robot inactive again (no position on board, stays in state.robots)
-            robot.coordinates = None
-            robot.direction = Direction.N
+            # Make robot inactive again (stays on map at original position)
+            # Robot keeps its original coordinates from initialization
+            robot.is_active = False
             robot.start_coordinates = []
             robot.selection_confirmed = False
             self.available_robots.append(robot)
@@ -176,13 +189,14 @@ class Server:
         else:
             robot = self.available_robots.pop(0)
 
-        # Place robot on next available start position (activate it)
-        start_position = self.start_positions[len(self.assigned_robots)]
+        # Place robot on next available player start position (activate it)
+        start_position = self.player_start_positions[len(self.assigned_robots)]
         robot.coordinates = start_position['coordinates']
         robot.direction = start_position['direction']
         robot.start_coordinates = [start_position['coordinates']]
+        robot.is_active = True  # Mark as active (selected by player)
 
-        # Robot is already in state.robots, just activate it and deal cards
+        # Robot is already in state.robots, just deal cards
         self.state.start_coordinates.append(start_position['coordinates'])
         self.state.deal_cards(robot)
 
@@ -228,8 +242,8 @@ class Server:
         started or game round is played.
         """
         robot.selection_confirmed = True
-        # Count only active robots (those with coordinates - assigned to players)
-        active_robots = [r for r in self.state.robots if r.coordinates is not None]
+        # Count only active robots (those selected by players)
+        active_robots = [r for r in self.state.robots if hasattr(r, 'is_active') and r.is_active]
         active_robot_count = len(active_robots)
         # Count confirmations only for active robots
         confirmed_count = sum(1 for r in active_robots if r.selection_confirmed)

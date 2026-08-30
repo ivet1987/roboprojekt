@@ -208,9 +208,6 @@ def draw_state(state, winner_time, available_robots, window, last_robots=None, a
 
         if available_robots:
             for robot in available_robots:
-                # Skip inactive robots (not yet selected by players)
-                if robot.coordinates is None:
-                    continue
                 x, y = robot.coordinates
                 for robot_sprite in robot_sprites:
                     border_sprite.x = robot_sprite.x*TILE_WIDTH
