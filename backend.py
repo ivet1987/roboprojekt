@@ -731,7 +731,11 @@ class State:
         will reboot on start coordinates.
         """
         self.robots = [robot for robot in self.robots if robot.permanent_damages < 10]
+        # Only process robots that were selected by players (have coordinates)
         for robot in self.robots:
+            # Skip robots that were never selected (coordinates is None)
+            if robot.coordinates is None:
+                continue
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
             if robot.inactive:
