@@ -258,7 +258,7 @@ class Server:
         if self.state.winners:
             await self.send_message({"winner": self.state.winners})
         await self.send_message("round_over")
-        await self.send_message(self.state.robots_as_dict())
+        # Don't send robots state here - it's already in the log!
         await self.send_new_dealt_cards()
 
     async def timer(self, game_round):
